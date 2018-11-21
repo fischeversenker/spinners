@@ -1,0 +1,10 @@
+.container
+  .spinner-outer
+
+.settings
+  .settings__item
+    input.settings__item-input(type='range', min='10', max='200', [value]='size', (input)='onSizeInput($event.target.value)')
+    | {{ size }}
+  .settings__item
+    input.settings__item-input(type='range', min='0', max='40', [value]='border', (input)='onBorderInput($event.target.value)')
+    | {{ border }}
