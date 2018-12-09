@@ -1,0 +1,14 @@
+<div class='container'>
+  <div class='spinner-outer'></div>
+</div>
+
+<div class='settings'>
+  <form [formGroup]='spinwheelForm'>
+    <div class='settings__item' *ngFor='let control of controls'>
+      <label>
+          {{control.label}}: {{control.formControl.value}}<br>
+          <input class='settings__item-input' [type]='control.type' [min]='control.min' [max]='control.max' [formControlName]='control.id'>
+      </label>
+    </div>
+  </form>
+</div>

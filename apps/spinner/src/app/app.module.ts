@@ -1,13 +1,17 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { NxModule } from '@nrwl/nx';
 
 import { AppComponent } from './app.component';
-import { NxModule } from '@nrwl/nx';
-import { SpinwheelComponent } from './spinwheel/spinwheel.component';
+import { SpinwheelModule } from './spinwheel/spinwheel.module';
 
 @NgModule({
-  declarations: [AppComponent, SpinwheelComponent],
-  imports: [BrowserModule, NxModule.forRoot()],
+  declarations: [AppComponent],
+  imports: [
+    BrowserModule,
+    SpinwheelModule,
+    NxModule.forRoot()
+  ],
   providers: [],
   bootstrap: [AppComponent]
 })

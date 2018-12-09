@@ -1,29 +1,48 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostBinding } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { DomSanitizer } from '@angular/platform-browser';
+import { ControlsService, IControl } from '../controls.service';
+import { Observable } from 'rxjs';
+import { finalize, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'sp-spinwheel',
-  templateUrl: './spinwheel.component.pug',
+  templateUrl: './spinwheel.component.html',
   styleUrls: ['./spinwheel.component.scss']
 })
 export class SpinwheelComponent implements OnInit {
 
-  public size = 50;
-  public border = 20;
+  spinwheelForm: FormGroup;
+  controls$: Observable<IControl>;
+  controls: IControl[];
 
-  constructor() { }
+  @HostBinding('attr.style')
+  get settingsAsStyle(): any {
+    return this.sanitizer.bypassSecurityTrustStyle(this._getControlsValue());
+  }
+
+
+
+  constructor(
+    private sanitizer: DomSanitizer,
+    private controlsService: ControlsService,
+  ) {
+
+    this.controls = [];
+    this.controls$ = this.controlsService.getControls();
+    this.spinwheelForm = new FormGroup({});
+
+    this.controlsService.getControls().pipe(
+      tap(control => this.spinwheelForm.addControl(control.id, control.formControl)),
+      tap(control => this.controls.push(control)),
+    ).subscribe();
+  }
 
   ngOnInit() {
   }
 
-  onSizeInput(newSize: string) {
-    this.size = Math.floor(Number(newSize));
-    (document.querySelector('.spinner-outer') as HTMLElement).style.setProperty('--spinner-size', `${this.size}px`);
-
-    this.onBorderInput(this.size * 0.2);
+  private _getControlsValue(): string {
+    return this.controls.map(control => `${control.var}: ${control.formControl.value}${control.unit}`).join(';');
   }
 
-  onBorderInput(newBorder: string | number) {
-    this.border = Math.floor(Number(newBorder));
-    (document.querySelector('.spinner-outer') as HTMLElement).style.setProperty('--border-width', `${this.border}px`);
-  }
 }
