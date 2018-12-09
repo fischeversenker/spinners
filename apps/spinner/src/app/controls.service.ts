@@ -9,13 +9,15 @@ export interface IControl {
   id: string;
   label: string;
   var: string;
-  value?: number | string;
-  default: number | string;
+  value?: number | string | boolean;
+  default: number | string | boolean;
   min?: number;
   max?: number;
   type?: string;
   unit: string;
   formControl?: FormControl;
+  checkboxValues?: { checked: string, unchecked: string },
+  transformer?: (any) => string;
 }
 
 @Injectable({
@@ -31,10 +33,10 @@ export class ControlsService {
         map((control) => {
 
           const validators = [];
-          if (typeof control.min !== 'undefined') {
+          if (control.min !== null && typeof control.min !== 'undefined') {
             validators.push(Validators.min(control.min));
           }
-          if (typeof control.max !== 'undefined') {
+          if (control.max !== null && typeof control.max !== 'undefined') {
             validators.push(Validators.max(control.max));
           }
 

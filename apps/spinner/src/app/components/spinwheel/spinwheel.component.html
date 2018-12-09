@@ -1,0 +1,25 @@
+<div class='container'>
+  <div class='spinner-outer'></div>
+</div>
+
+<div class='settings'>
+  <form [formGroup]='spinwheelForm'>
+    <div class='settings__item' *ngFor='let control of controls'>
+      <label>
+        {{control.label}}: {{control.formControl.value}}<br>
+
+        <ng-container [ngSwitch]='control.type'>
+          <ng-container *ngSwitchCase='"range"'>
+            <input class='settings__item-input' type='range' [min]='control.min' [max]='control.max' [formControlName]='control.id' [value]='control.default'>
+          </ng-container>
+          <ng-container *ngSwitchCase='"checkbox"'>
+            <input class='settings__item-input' type='checkbox' [formControlName]='control.id'>
+          </ng-container>
+          <ng-container *ngSwitchDefault>
+            <input class='settings__item-input' type='text' [formControlName]='control.id'>
+          </ng-container>
+        </ng-container>
+      </label>
+    </div>
+  </form>
+</div>

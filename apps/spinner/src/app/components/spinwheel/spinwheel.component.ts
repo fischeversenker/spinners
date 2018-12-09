@@ -1,7 +1,7 @@
 import { Component, OnInit, HostBinding } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
-import { ControlsService, IControl } from '../controls.service';
+import { ControlsService, IControl } from '../../controls.service';
 import { Observable } from 'rxjs';
 import { finalize, tap } from 'rxjs/operators';
 
@@ -21,8 +21,6 @@ export class SpinwheelComponent implements OnInit {
     return this.sanitizer.bypassSecurityTrustStyle(this._getControlsValue());
   }
 
-
-
   constructor(
     private sanitizer: DomSanitizer,
     private controlsService: ControlsService,
@@ -41,8 +39,22 @@ export class SpinwheelComponent implements OnInit {
   ngOnInit() {
   }
 
-  private _getControlsValue(): string {
-    return this.controls.map(control => `${control.var}: ${control.formControl.value}${control.unit}`).join(';');
+  // returns string of css vars
+  // each control can specifiy a transformer to transform the raw input value
+  // before plugging it into the css.
+  // if not specified the css value will be `formControl.value + unit` (eg. '95px').
+  private _getControlsValue(): any {
+    const controlStrings = [];
+    this.controls.forEach((control) => {
+      if (!control.formControl) {
+        return;
+      }
+      const defaultTransformer = (c) => `${c.formControl.value}${c.unit}`;
+      const valueTransformer: (any) => string = control.transformer || defaultTransformer;
+      controlStrings.push(`${control.var}: ${valueTransformer(control)}`);
+    });
+
+    return controlStrings.join('; ');
   }
 
 }

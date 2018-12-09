@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { NxModule } from '@nrwl/nx';
 
 import { AppComponent } from './app.component';
-import { SpinwheelModule } from './spinwheel/spinwheel.module';
+import { SpinwheelModule } from './components/spinwheel/spinwheel.module';
 
 @NgModule({
   declarations: [AppComponent],
